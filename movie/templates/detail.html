@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="card mb-3">
+        <div class="row">
+            <div class="col-lg-4 col-md-4">
+            <img src="{{ movie.image.url }}" class="img-fluid rounded-start" alt="movie-detail-image" />
+        </div>
+            <div class="col-lg-8 col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{ movie.title }}
+                </h5>
+                <p class="card-text">
+                    {{ movie.description }}
+                </p>
+                <p class="card-text">
+                    {% if movie.url %}
+                        <a href="{{ movie.url }}" class="btn btn-primary">Movie Link</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'review_create_view' movie.id %}" class="btn btn-primary">
+                            Add Review
+                        </a>
+                    {% endif %}
+                </p>
+                <hr />
+                <h3>Reviews</h3>
+                <ul class="list-group">
+                    {% for review in reviews %}
+                        <li class="list-group-item pb-3 pt-3">
+                            <h5 class="card-title">
+                                Review By {{ review.user.username }}
+                            </h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                {{ review.date }}
+                            </h6>
+                            <p class="card-text">
+                                {{ review.text }}
+                            </p>
+                             <p class="card-text">
+                                <span>Do you want to watch it again? </span>
+                                 {{ review.watch_again }}
+                            </p>
+                            {% if user.is_authenticated and user == review.user %}
+                                <a href="{% url 'review_update_view' review.id %}" class="btn btn-primary me-2">Update</a>
+                                <a href="{% url 'review_delete_view' review.id %}" class="btn btn-danger">Delete</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        </div>
+
+    </div>
+{% endblock content %}
